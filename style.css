@@ -1,25 +1,26 @@
-body {
-    background-color: lightgray;
-}
+/* general style stuff*/
+body {background-color: lightgray;}
   
-h1 {
-    font-size: 24px;
-}
+h1 {font-size: 24px;}
   
-.text {
-    color: rgb(0, 0, 0);
-}
+.text {color: rgb(0, 0, 0);}
 
 /* grid display for home page */
-.homep{display: grid;}
-.homeContainer {gap: 2px; grid-template-areas: 'h h c c' 'p b b l' 'f f f f' 'p1 p2 p3 p4';
-    color: rgb(0, 0, 0); margin-bottom: 20px;}
+.homep{
+    display: grid;
+}
+.homeContainer {
+    gap: 2px; 
+    grid-template-areas: 'h h c c' 'p b b l' 'f f f f' 'p1 p2 p3 p4';
+    color: rgb(0, 0, 0); 
+    margin-bottom: 20px;
+}
 .homeContainer > div {background-color: rgb(255, 255, 255); padding: 4px; text-align: center;}
 #header {grid-area: h;} /* Name and such*/
 #contact {grid-area: c;} 
 #picture {grid-area: p;}
-#bio {grid-area: b}
-#links {grid-area: l} /* go to other pages, description of other pages*/
+#bio {grid-area: b;}
+#links {grid-area: l;} /* go to other pages, description of other pages*/
 #footer {grid-area: f;}
 
 /* a picture of each project with a title/link to respective page*/
@@ -27,3 +28,9 @@ h1 {
 #project2 {grid-area: p2;}
 #project3 {grid-area: p3;}
 #project4 {grid-area: p4;}
+
+#proj1pic {
+    max-width: 100%;
+    height: auto;
+}
+

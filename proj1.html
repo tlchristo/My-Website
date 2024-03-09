@@ -3,19 +3,115 @@
     <head> 
         <meta charset="utf-8">
         <title>Simple Projectile Motion</title> 
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="proj1style.css">
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head> 
     <body> 
-        <!-- projectile motion, no air resistance-->
-        <!-- for display set a min height and width, maybe do 1meter = __ pixels?-->
-        <!-- with variable launch angle and initial velocity, (mass, gravity)
-                - display all-->
-        <!-- calculate max distance and height
-                - display max distance and height for time-->
-        <!-- draw a parabola for path of motion
-                - display n evenly spaced (w/ respect to time) points on parabola for x,y,t values-->
-        <!-- NOTE, cannot do this for air resistance because path is not a parabola, would need diff eq and approximations for this-->
+        <!-- picture display-->
+        <canvas id="canvas" width=1800 height="700"></canvas>
+        <div id="ground"></div> 
+
+        <!-- initial val inputs/ display-->
+        <div id="inputs">
+            <label for="iVel"> Initial Velocity (m/s)</label>
+                <input type="number" id= "iVel"  value="15" min="0" max="35">
+            <label for="angle"> Launch angle</label>
+                <input type="range" id= "angle" value="0" min="0" max="90" step="1" oninput="changeAngle()">
+            <p id="lauchAngle"> 0 degrees</p>
+            <button type="button" onclick="launch()" id ="launch">Launch!</button> 
+        </div>
+        <!-- output val display-->
+        <div id="outputs">
+            <label for="distance">Distance</label>
+                <input type="text" id="distance" readonly>
+            <label for="maxheight"> Max Height</label>
+                <input type="text" id="maxHeight" readonly>
+            <label for="timeInAir"> Time in air</label>
+                <input type="text" id="timeInAir" readonly>  
+        </div>
+        <div id="header">
+            <!-- title-->
+            <h1 class="text"> Simple Projectile Motion</h1>
+        </div>
+        <div id="backHome">
+            <a href="index.html">Home Page</a>
+        </div>
+        <div id="launcher">
+            <img id="arrow" alt="arrow" src = arrow.png>
+        </div>
 
     </body>
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        ctx.fillStlye = "red";
+        ctx.font ="bold 16px Arial";
+        ctx.fillText("25m", 390, 685)
+        ctx.fillText("50m", 790, 685)
+        ctx.fillText("75m", 1190, 685)
+        ctx.fillText("100m", 1585, 685)
+        ctx.transform(1, 0, 0, -1, 0, canvas.height);
+        var iVel;
+        var angle;
+        const g = 9.81;
+        const scalingFact = 4;
+        ctx.moveTo(400,0);
+        ctx.lineTo(400, 10);
+        ctx.moveTo(800,0);
+        ctx.lineTo(800, 10);
+        ctx.moveTo(1200,0);
+        ctx.lineTo(1200, 10);
+        ctx.moveTo(1600,0);
+        ctx.lineTo(1600, 10);
+        ctx.stroke();
+
+        
+
+        function toRadians (theta) {
+            return theta * (Math.PI / 180);
+        }
+
+        function draw (vi, angle) {
+            const vx = (vi * Math.cos(angle)) * scalingFact;
+            const vy = (vi * Math.sin(angle)) * scalingFact;
+            const startTime = Date.now();
+
+            function update() {
+                t = (Date.now() - startTime)/200;
+                let x = vx * t;
+                let y = vy * t - (0.5 * g * Math.pow(t, 2));
+                ctx.beginPath();
+                ctx.arc(x, y, 2, 0, Math.PI * 2);
+                ctx.fill();
+                if (y < 0) return;
+                setTimeout(update, t);
+            }
+
+            update();
+            ctx.beginPath();
+            ctx.arc(vx *vy / g, Math.pow(vy, 2) / (2 * g), 10, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(Math.pow(vi*scalingFact, 2) * Math.sin(2 * angle) / g, 0, 10, 0, Math.PI * 2)
+            ctx.stroke();
+        }
+
+        function launch(){
+            iVel = parseInt(document.getElementById("iVel").value);
+            angle = parseInt(document.getElementById("angle").value);
+            angleRads = toRadians(angle);
+
+            document.getElementById("maxHeight").value = (iVel * iVel * Math.sin(angleRads) *Math.sin(angleRads) / (2 * g)).toFixed(2) + " m";
+            document.getElementById("timeInAir").value = (2 * iVel * Math.sin(angleRads) / g).toFixed(2) + " s";
+            document.getElementById("distance").value =  (iVel * iVel * Math.sin(2 * angleRads) / g).toFixed(2) + " m";
+            
+            draw(iVel, angleRads);
+        }
+
+        function changeAngle(){
+            angle = parseInt(document.getElementById('angle').value);
+            document.getElementById('launcher').style.transform = "rotate(-" + angle + "deg)";
+            document.getElementById('lauchAngle').innerHTML = angle + ' degrees';
+        }
+    </script>
 </html>
